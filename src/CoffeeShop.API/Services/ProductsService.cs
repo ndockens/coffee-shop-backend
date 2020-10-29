@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CoffeeShop.API.DTOs;
@@ -7,7 +6,7 @@ using CoffeeShop.API.Repositories;
 
 namespace CoffeeShop.API.Services
 {
-    public class ProductsService
+    public class ProductsService : IProductsService
     {
         private readonly IProductsRepository _productsRepository;
 

@@ -11,7 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 using CoffeeShop.API.Models;
+using CoffeeShop.API.Repositories;
+using CoffeeShop.API.Services;
 
 namespace CoffeeShop.API
 {
@@ -29,6 +32,8 @@ namespace CoffeeShop.API
         {
             services.AddDbContext<CoffeeShopContext>(options =>
                options.UseInMemoryDatabase("CoffeeShop"));
+            services.AddSingleton<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IProductsService, ProductsService>();
             services.AddControllers();
         }
 

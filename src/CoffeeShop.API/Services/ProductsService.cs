@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoffeeShop.API.DTOs;
+using CoffeeShop.API.Models;
 using CoffeeShop.API.Repositories;
 
 namespace CoffeeShop.API.Services
@@ -16,27 +18,63 @@ namespace CoffeeShop.API.Services
 
         public List<ProductDTO> Get()
         {
-            throw new NotImplementedException();
+            var products = _productsRepository.Get();
+
+            return products.Select(x => new ProductDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                DisplayName = x.DisplayName,
+                Description = x.Description,
+                CategoryId = x.CategoryId
+            }).ToList();
         }
 
         public ProductDTO Get(int id)
         {
-            throw new NotImplementedException();
+            var product = _productsRepository.Get(id);
+
+            return new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                DisplayName = product.DisplayName,
+                Description = product.Description,
+                CategoryId = product.CategoryId
+            };
         }
 
         public void Add(ProductDTO product)
         {
-            throw new NotImplementedException();
+            var productModel = new Product
+            {
+                Id = product.Id,
+                Name = product.Name,
+                DisplayName = product.DisplayName,
+                Description = product.Description,
+                CategoryId = product.CategoryId
+            };
+
+            _productsRepository.Add(productModel);
         }
 
         public void Update(ProductDTO product)
         {
-            throw new NotImplementedException();
+            var productModel = new Product
+            {
+                Id = product.Id,
+                Name = product.Name,
+                DisplayName = product.DisplayName,
+                Description = product.Description,
+                CategoryId = product.CategoryId
+            };
+
+            _productsRepository.Update(productModel);
         }
 
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            _productsRepository.Remove(id);
         }
     }
 }

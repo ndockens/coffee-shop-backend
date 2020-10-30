@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using CoffeeShop.API.DTOs;
 using CoffeeShop.API.Services;
 
 namespace CoffeeShop.API.Controllers
@@ -16,9 +18,9 @@ namespace CoffeeShop.API.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult Get()
+        public ActionResult<IEnumerable<ProductDTO>> Get()
         {
-            throw new NotImplementedException();
+            return _productsService.Get();
         }
     }
 }

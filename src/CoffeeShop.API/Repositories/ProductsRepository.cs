@@ -26,6 +26,11 @@ namespace CoffeeShop.API.Repositories
             return _products.FirstOrDefault(x => x.Id == id);
         }
 
+        public Product Get(string name)
+        {
+            return _products.FirstOrDefault(x => x.Name == name);
+        }
+
         public void Add(Product product)
         {
             _products.Add(product);

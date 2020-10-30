@@ -7,6 +7,7 @@ namespace CoffeeShop.API.Repositories
     {
         List<Product> Get();
         Product Get(int id);
+        Product Get(string name);
         void Add(Product product);
         void Update(Product product);
         void Remove(int id);

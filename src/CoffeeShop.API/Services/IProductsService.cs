@@ -7,6 +7,7 @@ namespace CoffeeShop.API.Services
     {
         List<ProductDTO> Get();
         ProductDTO Get(int id);
+        ProductDTO Get(string name);
         void Add(ProductDTO product);
         void Update(ProductDTO product);
         void Remove(int id);

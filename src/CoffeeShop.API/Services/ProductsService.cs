@@ -43,6 +43,20 @@ namespace CoffeeShop.API.Services
             };
         }
 
+        public ProductDTO Get(string name)
+        {
+            var product = _productsRepository.Get(name);
+
+            return new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                DisplayName = product.DisplayName,
+                Description = product.Description,
+                CategoryId = product.CategoryId
+            };
+        }
+
         public void Add(ProductDTO product)
         {
             var productModel = new Product

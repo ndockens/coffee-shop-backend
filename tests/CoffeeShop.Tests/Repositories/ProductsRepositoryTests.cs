@@ -29,6 +29,16 @@ namespace CoffeeShop.Tests.Repositories
         }
 
         [Fact]
+        public void Get_InputIsLatte_ShouldReturnProductWithNameEqualToLatte()
+        {
+            var repo = new ProductsRepository();
+
+            var result = repo.Get("Latte");
+
+            Assert.Equal("Latte", result.Name);
+        }
+
+        [Fact]
         public void Add_InputIsNewProduct_ShouldAddProductToDatabase()
         {
             var repo = new ProductsRepository();

@@ -23,7 +23,7 @@ namespace CoffeeShop.API.Controllers
             return _productsService.Get();
         }
 
-        [HttpGet("")]
+        [HttpGet("{id}")]
         public ActionResult<ProductDTO> Get(int id)
         {
             return _productsService.Get(id);
@@ -42,6 +42,34 @@ namespace CoffeeShop.API.Controllers
             var createdProduct = _productsService.Get(product.Name);
 
             return Created($"products/{createdProduct.Id}", createdProduct);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, ProductDTO product)
+        {
+            if (_productsService.Get(id) == null)
+                return NotFound();
+
+            if (string.IsNullOrWhiteSpace(product.Name))
+                return BadRequest("Name cannot be null or empty");
+
+            if (product.CategoryId == 0)
+                return BadRequest("Category ID cannot be null or zero");
+
+            _productsService.Update(product);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            if (_productsService.Get(id) == null)
+                return NotFound();
+
+            _productsService.Remove(id);
+
+            return NoContent();
         }
     }
 }

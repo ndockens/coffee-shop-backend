@@ -18,6 +18,7 @@ namespace CoffeeShop.Tests.Controllers
             _serviceMock = new Mock<IProductsService>();
             _serviceMock.Setup(x => x.Get()).Returns(new List<ProductDTO>());
             _serviceMock.Setup(x => x.Get(1)).Returns(new ProductDTO());
+            _serviceMock.Setup(x => x.Get(999)).Returns(null as ProductDTO);
             _serviceMock.Setup(x => x.Get("Some New Product")).Returns(new ProductDTO { Id = 999, Name = "Some New Product", CategoryId = 1 });
 
             _controller = new ProductsController(_serviceMock.Object);
@@ -103,6 +104,80 @@ namespace CoffeeShop.Tests.Controllers
             var result = _controller.Post(product);
 
             Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
+        }
+
+        [Fact]
+        public void Put_InputsAre1AndValidProduct_ShouldCallServiceUpdateMethodWithInputEqualToProduct()
+        {
+            var product = new ProductDTO { Id = 1, Name = "Drip Coffee (Updated)", CategoryId = 1 };
+
+            _controller.Put(product.Id, product);
+
+            _serviceMock.Verify(x => x.Update(product), Times.Once);
+        }
+
+        [Fact]
+        public void Put_InputsAre1AndValidProduct_ShouldReturnNoContent()
+        {
+            var product = new ProductDTO { Id = 1, Name = "Drip Coffee (Updated)", CategoryId = 1 };
+
+            var result = _controller.Put(product.Id, product);
+
+            Assert.Equal(typeof(NoContentResult), result.GetType());
+        }
+
+        [Fact]
+        public void Put_InputsAre999AndValidProduct_ShouldReturnNotFound()
+        {
+            var product = new ProductDTO { Id = 999, Name = "Non-Existent Product", CategoryId = 1 };
+
+            var result = _controller.Put(product.Id, product);
+
+            Assert.Equal(typeof(NotFoundResult), result.GetType());
+        }
+
+        [Fact]
+        public void Put_InputIsProductWithNoCategoryId_ShouldReturnBadRequest()
+        {
+            var product = new ProductDTO { Id = 1, Name = "Drip Coffee (Updated)" };
+
+            var result = _controller.Put(product.Id, product);
+
+            Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
+        }
+
+        [Fact]
+        public void Put_InputIsProductWithNoName_ShouldReturnBadRequest()
+        {
+            var product = new ProductDTO { Id = 1, CategoryId = 1 };
+
+            var result = _controller.Put(product.Id, product);
+
+            Assert.Equal(typeof(BadRequestObjectResult), result.GetType());
+        }
+
+        [Fact]
+        public void Delete_InputIs1_ShouldCallServiceRemoveMethodWithInputEqualTo1()
+        {
+            _controller.Delete(1);
+
+            _serviceMock.Verify(x => x.Remove(1), Times.Once);
+        }
+
+        [Fact]
+        public void Delete_InputIs1_ShouldReturnNoContent()
+        {
+            var result = _controller.Delete(1);
+
+            Assert.Equal(typeof(NoContentResult), result.GetType());
+        }
+
+        [Fact]
+        public void Delete_InputIs999_ShouldReturnNotFound()
+        {
+            var result = _controller.Delete(999);
+
+            Assert.Equal(typeof(NotFoundResult), result.GetType());
         }
     }
 }

@@ -5,20 +5,28 @@ namespace CoffeeShop.API.Models
 {
     public class CoffeeShopContext : DbContext
     {
-        private List<Product> _products = new List<Product>
-        {
-            new Product { Id = 1, Name = "Drip Coffee", CategoryId = 1 },
-            new Product { Id = 2, Name = "Latte", CategoryId = 2 },
-            new Product { Id = 3, Name = "Cappuccino", CategoryId = 2 },
-            new Product { Id = 4, Name = "Mocha", CategoryId = 2 },
-            new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
-        };
-
         public CoffeeShopContext(DbContextOptions<CoffeeShopContext> options)
             : base(options)
         {
             // For now, use pre-populated data
-            Products.AddRange(_products);
+            InitializeDatabase();
+        }
+
+        private async void InitializeDatabase()
+        {
+            var products = new List<Product>
+            {
+                new Product { Id = 1, Name = "Drip Coffee", CategoryId = 1 },
+                new Product { Id = 2, Name = "Latte", CategoryId = 2 },
+                new Product { Id = 3, Name = "Cappuccino", CategoryId = 2 },
+                new Product { Id = 4, Name = "Mocha", CategoryId = 2 },
+                new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
+            };
+
+            if (await Products.AnyAsync())
+                await Products.ForEachAsync(x => Products.Remove(x));
+
+            Products.AddRange(products);
             SaveChanges();
         }
 

@@ -7,38 +7,37 @@ namespace CoffeeShop.API.Repositories
 {
     public class ProductsRepository : IProductsRepository
     {
-        private List<Product> _products = new List<Product>
+        private readonly CoffeeShopContext _context;
+
+        public ProductsRepository(CoffeeShopContext context)
         {
-            new Product { Id = 1, Name = "Drip Coffee", CategoryId = 1 },
-            new Product { Id = 2, Name = "Latte", CategoryId = 2 },
-            new Product { Id = 3, Name = "Cappuccino", CategoryId = 2 },
-            new Product { Id = 4, Name = "Mocha", CategoryId = 2 },
-            new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
-        };
+            _context = context;
+        }
 
         public List<Product> Get()
         {
-            return _products;
+            return _context.Products.ToList(); ;
         }
 
         public Product Get(int id)
         {
-            return _products.FirstOrDefault(x => x.Id == id);
+            return _context.Products.FirstOrDefault(x => x.Id == id);
         }
 
         public Product Get(string name)
         {
-            return _products.FirstOrDefault(x => x.Name == name);
+            return _context.Products.FirstOrDefault(x => x.Name == name);
         }
 
         public void Add(Product product)
         {
-            _products.Add(product);
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         public void Update(Product product)
         {
-            var existingProduct = _products.FirstOrDefault(x => x.Id == product.Id);
+            var existingProduct = _context.Products.FirstOrDefault(x => x.Id == product.Id);
 
             if (existingProduct == null)
                 return;
@@ -48,16 +47,19 @@ namespace CoffeeShop.API.Repositories
             existingProduct.Description = product.Description;
             existingProduct.CategoryId = product.CategoryId;
             existingProduct.Category = product.Category;
+
+            _context.SaveChanges();
         }
 
         public void Remove(int id)
         {
-            var existingProduct = _products.FirstOrDefault(x => x.Id == id);
+            var existingProduct = _context.Products.FirstOrDefault(x => x.Id == id);
 
             if (existingProduct == null)
                 return;
 
-            _products.Remove(existingProduct);
+            _context.Products.Remove(existingProduct);
+            _context.SaveChanges();
         }
     }
 }

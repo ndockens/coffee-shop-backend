@@ -32,7 +32,7 @@ namespace CoffeeShop.API
         {
             services.AddDbContext<CoffeeShopContext>(options =>
                options.UseInMemoryDatabase("CoffeeShop"));
-            services.AddSingleton<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<IProductsService, ProductsService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using CoffeeShop.API.Repositories;
 using CoffeeShop.API.Models;
@@ -8,12 +9,21 @@ namespace CoffeeShop.Tests.Repositories
 {
     public class ProductsRepositoryTests
     {
+        private ProductsRepository _repository;
+
+        public ProductsRepositoryTests()
+        {
+            var options = new DbContextOptionsBuilder<CoffeeShopContext>()
+                .UseInMemoryDatabase("CoffeeShop")
+                .Options;
+
+            _repository = new ProductsRepository(new CoffeeShopContext(options));
+        }
+
         [Fact]
         public void Get_NoInput_ShouldReturn5Products()
         {
-            var repo = new ProductsRepository();
-
-            var result = repo.Get();
+            var result = _repository.Get();
 
             Assert.Equal(5, result.Count);
         }
@@ -21,9 +31,7 @@ namespace CoffeeShop.Tests.Repositories
         [Fact]
         public void Get_InputIs1_ShouldReturnProductWithIdEqualTo1()
         {
-            var repo = new ProductsRepository();
-
-            var result = repo.Get(1);
+            var result = _repository.Get(1);
 
             Assert.Equal(1, result.Id);
         }
@@ -31,9 +39,7 @@ namespace CoffeeShop.Tests.Repositories
         [Fact]
         public void Get_InputIsLatte_ShouldReturnProductWithNameEqualToLatte()
         {
-            var repo = new ProductsRepository();
-
-            var result = repo.Get("Latte");
+            var result = _repository.Get("Latte");
 
             Assert.Equal("Latte", result.Name);
         }
@@ -41,15 +47,14 @@ namespace CoffeeShop.Tests.Repositories
         [Fact]
         public void Add_InputIsNewProduct_ShouldAddProductToDatabase()
         {
-            var repo = new ProductsRepository();
             var input = new Product
             {
                 Id = 6,
                 Name = "Some New Product"
             };
 
-            repo.Add(input);
-            var result = repo.Get(6);
+            _repository.Add(input);
+            var result = _repository.Get(6);
 
             Assert.Same(input, result);
         }
@@ -57,7 +62,6 @@ namespace CoffeeShop.Tests.Repositories
         [Fact]
         public void Update_InputIsExistingProduct_ShouldUpdateProductProperties()
         {
-            var repo = new ProductsRepository();
             var input = new Product
             {
                 Id = 1,
@@ -67,8 +71,8 @@ namespace CoffeeShop.Tests.Repositories
                 CategoryId = 2
             };
 
-            repo.Update(input);
-            var result = repo.Get(1);
+            _repository.Update(input);
+            var result = _repository.Get(1);
 
             // Todo: Refactor this code so there's only one assert
             Assert.Equal(input.Name, result.Name);
@@ -81,10 +85,8 @@ namespace CoffeeShop.Tests.Repositories
         [Fact]
         public void Remove_InputIsExistingProduct_ShouldRemoveProductFromDatabase()
         {
-            var repo = new ProductsRepository();
-
-            repo.Remove(1);
-            var result = repo.Get(1);
+            _repository.Remove(1);
+            var result = _repository.Get(1);
 
             Assert.Null(result);
         }

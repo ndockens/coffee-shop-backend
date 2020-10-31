@@ -16,6 +16,13 @@ namespace CoffeeShop.API.Repositories
             new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
         };
 
+        private readonly CoffeeShopContext _context;
+
+        public ProductsRepository(CoffeeShopContext context)
+        {
+            _context = context;
+        }
+
         public List<Product> Get()
         {
             return _products;

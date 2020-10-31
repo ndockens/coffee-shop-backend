@@ -84,7 +84,7 @@ namespace CoffeeShop.Tests.Services
         {
             var result = _service.Get(999);
 
-            Assert.Equal(null, result);
+            Assert.Null(result);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace CoffeeShop.Tests.Services
         {
             var result = _service.Get("blah");
 
-            Assert.Equal(null, result);
+            Assert.Null(result);
         }
 
         [Fact]

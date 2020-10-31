@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using Xunit;
 using CoffeeShop.API.DTOs;
@@ -86,16 +87,15 @@ namespace CoffeeShop.Tests.Services
         [Fact]
         public void Add_InputIsProduct_ShouldCallRepositoryAddMethodOneTimeWithInputEqualToProduct()
         {
-            var input = new ProductDTO
-            {
-                Id = 6,
-                Name = "Some New Product"
-            };
+            var input = new ProductDTO { Name = "Some New Product" };
 
             _service.Add(input);
 
+            // Product ID should be auto-populated based on max ID currently in the database
+            var maxProductId = _products.Max(x => x.Id);
+
             _productsRepositoryMock.Verify(x =>
-                x.Add(It.Is<Product>(y => y.Id == input.Id && y.Name == input.Name))
+                x.Add(It.Is<Product>(y => y.Id == maxProductId + 1 && y.Name == input.Name))
                 , Times.Once);
         }
 

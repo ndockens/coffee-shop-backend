@@ -59,9 +59,11 @@ namespace CoffeeShop.API.Services
 
         public void Add(ProductDTO product)
         {
+            var maxId = _productsRepository.Get().Max(x => x.Id);
+
             var productModel = new Product
             {
-                Id = product.Id,
+                Id = maxId + 1,
                 Name = product.Name,
                 DisplayName = product.DisplayName,
                 Description = product.Description,

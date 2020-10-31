@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Moq;
 using Xunit;
 using CoffeeShop.API.DTOs;
+using CoffeeShop.API.MapperProfiles;
 using CoffeeShop.API.Models;
 using CoffeeShop.API.Repositories;
 using CoffeeShop.API.Services;
@@ -37,7 +39,12 @@ namespace CoffeeShop.Tests.Services
             _productsRepositoryMock.Setup(x => x.Update(It.IsAny<Product>()));
             _productsRepositoryMock.Setup(x => x.Remove(It.IsAny<int>()));
 
-            _service = new ProductsService(_productsRepositoryMock.Object);
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ProductProfile());
+            }).CreateMapper();
+
+            _service = new ProductsService(_productsRepositoryMock.Object, mapper);
         }
 
         [Fact]
@@ -77,7 +84,7 @@ namespace CoffeeShop.Tests.Services
         {
             var result = _service.Get(999);
 
-            Assert.Equal(null, result);
+            Assert.Null(result);
         }
 
         [Fact]
@@ -101,7 +108,7 @@ namespace CoffeeShop.Tests.Services
         {
             var result = _service.Get("blah");
 
-            Assert.Equal(null, result);
+            Assert.Null(result);
         }
 
         [Fact]

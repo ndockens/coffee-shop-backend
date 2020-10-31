@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using CoffeeShop.API.DTOs;
 using CoffeeShop.API.Models;
 using CoffeeShop.API.Repositories;
@@ -9,24 +10,19 @@ namespace CoffeeShop.API.Services
     public class ProductsService : IProductsService
     {
         private readonly IProductsRepository _productsRepository;
+        private readonly IMapper _mapper;
 
-        public ProductsService(IProductsRepository productsRepository)
+        public ProductsService(IProductsRepository productsRepository, IMapper mapper)
         {
             _productsRepository = productsRepository;
+            _mapper = mapper;
         }
 
         public List<ProductDTO> Get()
         {
             var products = _productsRepository.Get();
 
-            return products.Select(x => new ProductDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DisplayName = x.DisplayName,
-                Description = x.Description,
-                CategoryId = x.CategoryId
-            }).ToList();
+            return _mapper.Map<List<ProductDTO>>(products);
         }
 
         public ProductDTO Get(int id)
@@ -36,14 +32,7 @@ namespace CoffeeShop.API.Services
             if (product == null)
                 return null;
 
-            return new ProductDTO
-            {
-                Id = product.Id,
-                Name = product.Name,
-                DisplayName = product.DisplayName,
-                Description = product.Description,
-                CategoryId = product.CategoryId
-            };
+            return _mapper.Map<ProductDTO>(product);
         }
 
         public ProductDTO Get(string name)
@@ -53,44 +42,19 @@ namespace CoffeeShop.API.Services
             if (product == null)
                 return null;
 
-            return new ProductDTO
-            {
-                Id = product.Id,
-                Name = product.Name,
-                DisplayName = product.DisplayName,
-                Description = product.Description,
-                CategoryId = product.CategoryId
-            };
+            return _mapper.Map<ProductDTO>(product);
         }
 
         public void Add(ProductDTO product)
         {
-            var maxId = _productsRepository.Get().Max(x => x.Id);
-
-            var productModel = new Product
-            {
-                Id = maxId + 1,
-                Name = product.Name,
-                DisplayName = product.DisplayName,
-                Description = product.Description,
-                CategoryId = product.CategoryId
-            };
-
-            _productsRepository.Add(productModel);
+            product.Id = _productsRepository.Get().Max(x => x.Id) + 1;
+            _productsRepository.Add(_mapper.Map<Product>(product));
         }
+
 
         public void Update(ProductDTO product)
         {
-            var productModel = new Product
-            {
-                Id = product.Id,
-                Name = product.Name,
-                DisplayName = product.DisplayName,
-                Description = product.Description,
-                CategoryId = product.CategoryId
-            };
-
-            _productsRepository.Update(productModel);
+            _productsRepository.Update(_mapper.Map<Product>(product));
         }
 
         public void Remove(int id)

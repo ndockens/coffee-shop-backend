@@ -23,11 +23,12 @@ namespace CoffeeShop.API.Models
                 new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
             };
 
-            if (await Products.AnyAsync())
-                await Products.ForEachAsync(x => Products.Remove(x));
-
-            Products.AddRange(products);
-            SaveChanges();
+            // Only initialize if data is not already present
+            if (!(await Products.AnyAsync()))
+            {
+                Products.AddRange(products);
+                SaveChanges();
+            }
         }
 
         public DbSet<Product> Products { get; set; }

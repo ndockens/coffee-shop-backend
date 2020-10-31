@@ -1,12 +1,25 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeShop.API.Models
 {
     public class CoffeeShopContext : DbContext
     {
+        private List<Product> _products = new List<Product>
+        {
+            new Product { Id = 1, Name = "Drip Coffee", CategoryId = 1 },
+            new Product { Id = 2, Name = "Latte", CategoryId = 2 },
+            new Product { Id = 3, Name = "Cappuccino", CategoryId = 2 },
+            new Product { Id = 4, Name = "Mocha", CategoryId = 2 },
+            new Product { Id = 5, Name = "Smoothie", CategoryId = 3 }
+        };
+
         public CoffeeShopContext(DbContextOptions<CoffeeShopContext> options)
             : base(options)
         {
+            // For now, use pre-populated data
+            Products.AddRange(_products);
+            SaveChanges();
         }
 
         public DbSet<Product> Products { get; set; }

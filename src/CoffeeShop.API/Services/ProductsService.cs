@@ -33,6 +33,9 @@ namespace CoffeeShop.API.Services
         {
             var product = _productsRepository.Get(id);
 
+            if (product == null)
+                return null;
+
             return new ProductDTO
             {
                 Id = product.Id,
@@ -47,6 +50,9 @@ namespace CoffeeShop.API.Services
         {
             var product = _productsRepository.Get(name);
 
+            if (product == null)
+                return null;
+
             return new ProductDTO
             {
                 Id = product.Id,
@@ -59,9 +65,11 @@ namespace CoffeeShop.API.Services
 
         public void Add(ProductDTO product)
         {
+            var maxId = _productsRepository.Get().Max(x => x.Id);
+
             var productModel = new Product
             {
-                Id = product.Id,
+                Id = maxId + 1,
                 Name = product.Name,
                 DisplayName = product.DisplayName,
                 Description = product.Description,

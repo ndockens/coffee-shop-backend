@@ -117,6 +117,16 @@ namespace CoffeeShop.Tests.Controllers
         }
 
         [Fact]
+        public void Put_InputsAre1AndValidProductWithNoId_ShouldPopulateProductIdFromUrlParameter()
+        {
+            var product = new ProductDTO { Name = "Drip Coffee (Updated)", CategoryId = 1 };
+
+            _controller.Put(1, product);
+
+            _serviceMock.Verify(x => x.Update(It.Is<ProductDTO>(x => x.Id == 1)), Times.Once);
+        }
+
+        [Fact]
         public void Put_InputsAre1AndValidProduct_ShouldReturnNoContent()
         {
             var product = new ProductDTO { Id = 1, Name = "Drip Coffee (Updated)", CategoryId = 1 };

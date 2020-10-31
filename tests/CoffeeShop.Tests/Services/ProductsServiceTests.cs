@@ -27,8 +27,12 @@ namespace CoffeeShop.Tests.Services
                 .Returns(_products);
             _productsRepositoryMock.Setup(x => x.Get(1))
                 .Returns(_products[0]);
+            _productsRepositoryMock.Setup(x => x.Get(999))
+                .Returns(null as Product);
             _productsRepositoryMock.Setup(x => x.Get("Latte"))
                 .Returns(_products[1]);
+            _productsRepositoryMock.Setup(x => x.Get("blah"))
+                .Returns(null as Product);
             _productsRepositoryMock.Setup(x => x.Add(It.IsAny<Product>()));
             _productsRepositoryMock.Setup(x => x.Update(It.IsAny<Product>()));
             _productsRepositoryMock.Setup(x => x.Remove(It.IsAny<int>()));
@@ -69,6 +73,14 @@ namespace CoffeeShop.Tests.Services
         }
 
         [Fact]
+        public void Get_InputIs999_ShouldReturnNull()
+        {
+            var result = _service.Get(999);
+
+            Assert.Equal(null, result);
+        }
+
+        [Fact]
         public void Get_InputIsLatte_ShouldCallRepositoryGetMethodOneTimeWithInputEqualToLatte()
         {
             _service.Get("Latte");
@@ -82,6 +94,14 @@ namespace CoffeeShop.Tests.Services
             var result = _service.Get("Latte");
 
             Assert.Equal("Latte", result.Name);
+        }
+
+        [Fact]
+        public void Get_InputIsBlah_ShouldReturnNull()
+        {
+            var result = _service.Get("blah");
+
+            Assert.Equal(null, result);
         }
 
         [Fact]

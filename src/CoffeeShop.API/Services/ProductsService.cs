@@ -33,6 +33,9 @@ namespace CoffeeShop.API.Services
         {
             var product = _productsRepository.Get(id);
 
+            if (product == null)
+                return null;
+
             return new ProductDTO
             {
                 Id = product.Id,
@@ -46,6 +49,9 @@ namespace CoffeeShop.API.Services
         public ProductDTO Get(string name)
         {
             var product = _productsRepository.Get(name);
+
+            if (product == null)
+                return null;
 
             return new ProductDTO
             {

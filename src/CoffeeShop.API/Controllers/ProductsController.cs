@@ -56,6 +56,9 @@ namespace CoffeeShop.API.Controllers
             if (product.CategoryId == 0)
                 return BadRequest("Category ID cannot be null or zero");
 
+            if (product.Id == 0)
+                product.Id = id;
+
             _productsService.Update(product);
 
             return NoContent();
